@@ -4,6 +4,7 @@ import utime
 import leds
 import bme680
 import color
+import buttons
 
 
 # TODO: read this from config
@@ -95,6 +96,9 @@ class Rainbow:
         for i in range(0, self.LED_COUNT):
             self.states[i] = (self.states[i] + self.STEP) % self.SMTH
 
+    def stop(self):
+        leds.clear()
+
 
 class Clock:
     '''
@@ -103,12 +107,19 @@ class Clock:
     def loop(self):
         rainbow = Rainbow()
         bme680.init()
+        led_enabled = ENABLE_LED
         with mod_display.open() as display:
             display.backlight(25)
             while True:
                 self.update_clock(display)
+                if buttons.read(buttons.BOTTOM_RIGHT):
+                    print('button pressed')
+                    led_enabled = not led_enabled
+                    if not led_enabled:
+                        # turn off leds
+                        rainbow.stop()
                 for _ in range(5):
-                    if ENABLE_LED:
+                    if led_enabled:
                         rainbow.step()
                     utime.sleep(0.1)
 
