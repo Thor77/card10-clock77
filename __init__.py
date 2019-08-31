@@ -227,7 +227,7 @@ class Clock:
             date = 'Day {}'.format(ccc_day[0])
             date_color = ccc_day[1]
         else:
-            date = '{}.{}'.format(day, MONTH_STRING[month])
+            date = '{}.{}'.format(day, MONTH_STRING[month - 1])
             date_color = (255, 255, 255)
         self.render_date(display, date, date_color)
         display.update()
